@@ -1,11 +1,42 @@
 
 var myApp = angular.module('myApp', ['fg', 'ngSanitize', 'markdown']);
+// Controller function and passing $http service , $scope var and Schema.
+myApp.controller('MyController', function($scope, $http, mySchema) {
 
-myApp.controller('MyController', function($scope, mySchema) {
+  // Something to store the input at.
 
-  $scope.myForm = {
-    schema: mySchema
-  };
+  $scope.myFormData = {};
+
+  // Expose the schema on the scope.
+
+  $scope.mySchema = mySchema;
+  
+// calling submit function.
+        $scope.formsubmit = function() {
+			 
+
+		// Posting data to php file
+        $http({
+          method  : 'POST',
+          url     : 'submit.php',
+          data    : $scope.myFormData, //form's data
+          headers : {'Content-Type': 'application/x-www-form-urlencoded'} 
+         })
+          .success(function(data) {
+			/*  
+            if (data.errors) {
+              // Showing errors.
+              $scope.errorName = data.errors.name;
+              $scope.errorUserName = data.errors.username;
+              $scope.errorEmail = data.errors.email;
+            } else {
+              $scope.message = data.message;
+            }
+			*/
+			alert(data);			
+          });
+		  
+        };
 
 });
 
@@ -14,7 +45,7 @@ myApp.value('mySchema', {
 	{
 	  "type": "text",
 	  "name": "name",
-	  "displayName": "Name",
+	  "displayName": "Name",	
 	  "validation": {
 		"messages": {
 		  "required": "Please fill the field",
